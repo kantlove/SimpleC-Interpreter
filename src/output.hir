@@ -1,0 +1,105 @@
+str "n = "
+str "m = "
+str "\n"
+str "sum = "
+str "gcd (n, m) = "
+
+entry main, 0
+
+func add
+funci 0, 1
+    add &0, %0_a, %1_b
+    retf add, &0
+    ~0:
+efunc add
+
+func double
+funci 0, 1
+    mult &0, %0_x, 2
+    retf double, &0
+    ~1:
+efunc double
+
+func gcd
+funci 0, 4
+    ~3:
+    neq &0, %0_a, %1_b
+    jt &0, ~4
+    jump ~2
+    ~4:
+    gt &1, %0_a, %1_b
+    jt &1, ~6
+    jump ~7
+    ~6:
+    sub &2, %0_a, %1_b
+    move %0_a, &2
+    ~8:
+    jump ~5
+    ~7:
+    sub &3, %1_b, %0_a
+    move %1_b, &3
+    ~9:
+    ~5:
+    jump ~3
+    ~2:
+    retf gcd, %0_a
+    ~10:
+efunc gcd
+
+func main
+funci 5, 8
+    write ?0
+    ~11:
+    read @0_n
+    ~12:
+    write ?1
+    ~13:
+    read @1_m
+    ~14:
+    move @3_sum, 0
+    ~15:
+    move @2_i, @0_n
+    ~17:
+    lte &0, @2_i, @1_m
+    jt &0, ~18
+    jump ~16
+    ~18:
+    mod &1, @2_i, 2
+    eq &2, &1, 0
+    jt &2, ~20
+    jump ~21
+    ~20:
+    sub &3, 0, @2_i
+    move @4_j, &3
+    ~22:
+    jump ~19
+    ~21:
+    move @4_j, @2_i
+    ~23:
+    ~19:
+    write @4_j
+    write ?2
+    ~24:
+    arg @4_j, 0
+    callf &4, double, 1
+    arg @3_sum, 0
+    arg &4, 1
+    callf &5, add, 2
+    move @3_sum, &5
+    ~25:
+    add &6, @2_i, 1
+    move @2_i, &6
+    jump ~17
+    ~16:
+    write ?3
+    write @3_sum
+    write ?2
+    ~26:
+    arg @0_n, 0
+    arg @1_m, 1
+    callf &7, gcd, 2
+    write ?4
+    write &7
+    write ?2
+    ~27:
+efunc main
